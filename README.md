@@ -11,16 +11,16 @@ Este projeto é dividido em 5 arquivos principais:
 * **`geninput.py`**
     * Um script em Python 3 para gerar os dados de entrada. Ele cria um arquivo de texto formatado com $K$ centróides iniciais ("chutes") e $N$ pontos de dados aleatórios.
 
-* **`kmeans_sequencial.c`**
+* **`kmeans_seqfinal.c`**
     * A implementação de referência (gabarito) do K-Means, executada em uma única thread.
 
-* **`kmeans_concorrente.c`**
+* **`kmeans_concfinal.c`**
     * A implementação paralela (Opção 2: Redução Local) do K-Means, que utiliza **PThreads** e um mecanismo de barreira manual (com mutex e variáveis de condição) para sincronização.
 
-* **`kmeans_sequencial_log.c`**
+* **`logseq.c`**
     * Uma versão de depuração do código sequencial. Além de executar o algoritmo, ela redireciona `stderr` para um arquivo `logseq.txt`, salvando o tempo de execução e logs detalhados de cada iteração.
 
-* **`kmeans_concorrente_log.c`**
+* **`logconc.c`**
     * Uma versão de depuração do código concorrente. Ela redireciona `stderr` para `log.txt`, salvando o tempo de execução e um log detalhado que mostra o trabalho de cada thread em cada etapa (Atribuição, Sincronização, Soma Local, Redução Global).
 
 ## Como Compilar e Executar
@@ -42,11 +42,11 @@ Você precisará do `gcc` e da biblioteca `pthreads`.
 
 ```bash
 # Compilar a versão Sequencial
-gcc kmeans_sequencial.c -o sequencial.exe -O3 -lm
+gcc kmeans_seqfinal.c -o seqfinal.exe -O3 -lm
 
 # Compilar a versão Concorrente
 # (As flags -lpthread e -mconsole são necessárias no MinGW/Windows)
-gcc kmeans_concorrente.c -o concorrente.exe -O3 -lm -lpthread -mconsole
+gcc kmeans_concfinal.c -o concfinal.exe -O3 -lm -lpthread -mconsole
 ```
 *(Compile as versões `_log` da mesma forma, se necessário).*
 
@@ -56,7 +56,7 @@ Use o `cat` e o *pipe* (`|`) para enviar o `input.txt` ao programa e redirecione
 
 **Execução Sequencial:**
 ```bash
-cat input.txt | ./sequencial.exe > output_seq.txt
+cat input.txt | ./seqfinal.exe > output_seq.txt
 ```
 
 **Execução Concorrente:**
@@ -64,15 +64,15 @@ O programa concorrente espera um argumento: o número de threads (T).
 
 ```bash
 # Exemplo de execução com 4 threads
-cat input.txt | ./concorrente.exe 4 > output_conc.txt
+cat input.txt | ./concfinal.exe 4 > output_conc.txt
 
 # Exemplo de execução com 8 threads
-cat input.txt | ./concorrente.exe 8 > output_conc.txt
+cat input.txt | ./concfinal.exe 8 > output_conc.txt
 ```
 
 ##  Estratégia de Paralelização (Opção 2: Redução Local)
 
-A versão concorrente (`kmeans_concorrente.c`) é otimizada para minimizar a contenção e os gargalos seriais, seguindo a Lei de Amdahl.
+A versão concorrente (`kmeans_concfinal.c`) é otimizada para minimizar a contenção e os gargalos seriais, seguindo a Lei de Amdahl.
 
 * **Etapa de Atribuição ($O(N \cdot K)$):** Totalmente paralelizada. Cada thread calcula as distâncias para sua própria fatia de $N$ pontos, sem qualquer conflito de escrita.
 * **Etapa de Atualização ($O(N)$):** Paralelizada usando **Redução Local**:
