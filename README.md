@@ -4,7 +4,7 @@ Este repositório contém as implementações sequencial e concorrente (paralela
 
 O algoritmo processa um conjunto de $N$ pontos de dados em 3 dimensões, agrupando-os em $K$ clusters.
 
-## 🚀 Conteúdo do Repositório
+## Conteúdo do Repositório
 
 Este projeto é dividido em 5 arquivos principais:
 
@@ -70,7 +70,7 @@ cat input.txt | ./concorrente.exe 4 > output_conc.txt
 cat input.txt | ./concorrente.exe 8 > output_conc.txt
 ```
 
-## 📈 Estratégia de Paralelização (Opção 2: Redução Local)
+##  Estratégia de Paralelização (Opção 2: Redução Local)
 
 A versão concorrente (`kmeans_concorrente.c`) é otimizada para minimizar a contenção e os gargalos seriais, seguindo a Lei de Amdahl.
 
